@@ -24,3 +24,11 @@ $ docker ps|grep '>'
 
 $ sh docker@0.0.0.0 -p 49154
 ```
+
+### Linking Container
+
+```
+docker run -d -P --name db koduki/centos
+docker run -d -P --name web --link db:database koduki/centos
+docker run -d -P --name mng --link db:database --link web:web koduki/centos
+```
