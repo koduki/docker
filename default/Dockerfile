@@ -95,4 +95,4 @@ RUN cd /usr/local/rbenv/plugins && git clone git://github.com/sstephenson/ruby-b
 
 RUN source /etc/profile && rbenv install 2.1.2 
 RUN source /etc/profile && rbenv global  2.1.2
-
+RUN source /etc/profile && gem install bundler
