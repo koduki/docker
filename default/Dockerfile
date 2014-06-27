@@ -87,12 +87,13 @@ CMD ["/usr/bin/supervisord"]
 # Ruby Environment
 #
 RUN cd /usr/local/ && git clone git://github.com/sstephenson/rbenv.git
-RUN echo 'export RBENV_ROOT="/usr/local/rbenv"' >> /etc/profile
-RUN echo 'export PATH="${RBENV_ROOT}/bin:${PATH}"' >> /etc/profile
-RUN echo 'eval "$(rbenv init -)"' >> /etc/profile
+RUN echo 'export RBENV_ROOT="/usr/local/rbenv"' >> /etc/profile.d/rbenv.sh
+RUN echo 'export PATH="${RBENV_ROOT}/bin:${PATH}"' >> /etc/profile.d/rbenv.sh
+RUN echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh
+
 RUN mkdir /usr/local/rbenv/plugins
 RUN cd /usr/local/rbenv/plugins && git clone git://github.com/sstephenson/ruby-build.git
 
-RUN source /etc/profile && rbenv install 2.1.2 
-RUN source /etc/profile && rbenv global  2.1.2
-RUN source /etc/profile && gem install bundler
+RUN bash -lc 'rbenv install 2.1.2'
+RUN bash -lc 'rbenv global  2.1.2'
+RUN bash -lc 'gem install bundler'

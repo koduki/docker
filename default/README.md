@@ -16,8 +16,8 @@ docker images
 ### run image
 
 ``
-docker rm -f test4; 
-docker run -d -P --name mng --hostname mng koduki/centos 
+docker rm -f app; 
+docker run -d -P --name app --hostname app koduki/centos 
 ``
 
 ### ssh
@@ -33,5 +33,5 @@ ssh-docker mng
 
 ### clean containers
 ``
-for id in $(docker ps -a | grep Exit | cut -d " " -f 1); do docker rm $id; done
+./scripts/clean-containers.sh
 ``
