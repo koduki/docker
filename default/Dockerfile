@@ -25,9 +25,10 @@ RUN yum --enablerepo=remi,epel install -y \
   unzip\
   zsh\
   nkf\
+  tar\
+  git\
   vim
 
-#
 # operation user
 #
 RUN useradd docker
@@ -45,11 +46,29 @@ RUN chown -R docker:docker /home/docker/
 
 
 #
-# run ssh
+# SSH
 #
 #ADD ./sshd_config /etc/ssh/sshd_config
-RUN /etc/init.d/sshd start
-RUN /etc/init.d/sshd stop
+RUN service sshd start
+RUN service sshd stop
+
+
+#
+# MySQL
+#
+RUN yum --enablerepo=remi,epel install -y mysql-server
+RUN touch /etc/sysconfig/network
+#RUN /etc/init.d/mysqld start && mysqladmin -u root password 'admin' && /etc/init.d/mysqld stop
+RUN /etc/init.d/mysqld start && /etc/init.d/mysqld stop
+
+
+#
+# Services(supervisor)
+#
+RUN yum --enablerepo=remi,epel install -y supervisor
+RUN mkdir -p /var/log/supervisor
+ADD ./resources/etc/supervisord.conf /etc/supervisord.conf 
+
 EXPOSE 22
-CMD ["/usr/sbin/sshd", "-D"]
+CMD ["/usr/bin/supervisord"]
 
