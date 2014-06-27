@@ -26,8 +26,18 @@ RUN yum --enablerepo=remi,epel install -y \
   zsh\
   nkf\
   tar\
-  git\
   vim
+
+#
+# Dev Tools
+#
+RUN yum --enablerepo=remi,epel groupinstall -y "Development tools"
+RUN yum --enablerepo=remi,epel,centosplus install -y \
+  gcc\
+  make\
+  openssl-devel\
+  readline-devel\
+  git 
 
 # operation user
 #
@@ -71,4 +81,18 @@ ADD ./resources/etc/supervisord.conf /etc/supervisord.conf
 
 EXPOSE 22
 CMD ["/usr/bin/supervisord"]
+
+
+#
+# Ruby Environment
+#
+RUN cd /usr/local/ && git clone git://github.com/sstephenson/rbenv.git
+RUN echo 'export RBENV_ROOT="/usr/local/rbenv"' >> /etc/profile
+RUN echo 'export PATH="${RBENV_ROOT}/bin:${PATH}"' >> /etc/profile
+RUN echo 'eval "$(rbenv init -)"' >> /etc/profile
+RUN mkdir /usr/local/rbenv/plugins
+RUN cd /usr/local/rbenv/plugins && git clone git://github.com/sstephenson/ruby-build.git
+
+RUN source /etc/profile && rbenv install 2.1.2 
+RUN source /etc/profile && rbenv global  2.1.2
 
