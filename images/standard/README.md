@@ -27,11 +27,11 @@ docker run -d -P --name app --hostname app koduki/centos
 ssh docker@192.168.59.103 -p 49153 -o "StrictHostKeyChecking no"
 
 # wrapper command
-alias ssh-docker=./scripts/ssh-docker.sh
+alias ssh-docker=../scripts/ssh-docker.sh
 ssh-docker mng
 ``
 
 ### clean containers
 ``
-./scripts/clean-containers.sh
+../scripts/clean-containers.sh
 ``
