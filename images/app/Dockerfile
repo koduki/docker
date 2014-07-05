@@ -1,4 +1,4 @@
-FROM koduki/centos
+FROM koduki/base
 MAINTAINER koduki
 
 #
@@ -13,27 +13,26 @@ RUN /etc/init.d/mysqld start && /etc/init.d/mysqld stop
 #
 # Ruby Environment
 #
-RUN yum --enablerepo=remi,epel install -y libxml2-devel libxslt1-dev
-RUN cd /usr/local/ && git clone git://github.com/sstephenson/rbenv.git
-RUN echo 'export RBENV_ROOT="/usr/local/rbenv"' >> /etc/profile.d/rbenv.sh
-RUN echo 'export PATH="${RBENV_ROOT}/bin:${PATH}"' >> /etc/profile.d/rbenv.sh
-RUN echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh
+# Install ruby
+RUN wget -P /root/src ftp://ftp.ruby-lang.org/pub/ruby/2.1/ruby-2.1.2.tar.gz
+RUN cd /root/src; tar xvf ruby-2.1.2.tar.gz
+RUN cd /root/src/ruby-2.1.2; ./configure; make install
 
-RUN mkdir /usr/local/rbenv/plugins
-RUN cd /usr/local/rbenv/plugins && git clone git://github.com/sstephenson/ruby-build.git
+# Install bundler
+RUN gem update --system
+RUN gem install bundler
 
-RUN bash -lc 'rbenv install 2.1.2'
-RUN bash -lc 'rbenv global  2.1.2'
-RUN bash -lc 'rbenv exec gem install bundler'
-RUN bash -lc 'rbenv rehash'
+# for Nokogiri
+RUN yum --enablerepo=remi,epel install -y libxml2-devel libxslt-devel
+RUN bundle config build.nokogiri --use-system-libraries
+
 
 #
 # Angurar JS Environment
 #
 RUN yum --enablerepo=remi,epel install -y npm nodejs
 RUN npm install -g grunt-cli grunt yo generator-angular
-RUN bash -lc 'rbenv exec gem install compass'
-RUN bash -lc 'rbenv rehash'
+RUN gem install compass
 
 #
 # Services(supervisor)

@@ -59,6 +59,10 @@ ADD resources/home/docker/.zshrc /home/docker/.zshrc
 ADD resources/home/docker/.zshrc.mine /home/docker/.zshrc.mine
 RUN chown -R docker:docker /home/docker/
 
+#
+# App Dir
+#
+RUN echo 'export PATH=/usr/local/bin:$PATH' >> /root/.bashrc
 
 #
 # SSH
