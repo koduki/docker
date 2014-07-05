@@ -1,7 +1,7 @@
 koduki's Dockerfile
 =======================
 
-my standard docker image.
+my app docker image.
 
 How to
 -----------------------
@@ -9,7 +9,7 @@ How to
 ### make image
 
 ``
-docker build -t koduki/centos .
+docker build -t koduki/app .
 docker images
 ``
 
@@ -17,14 +17,14 @@ docker images
 
 ``
 docker rm -f app; 
-docker run -d -P --name app --hostname app koduki/centos 
+docker run -d -P --name app --hostname app koduki/app
 ``
 
 ### ssh
 
 ``
 # raw command
-ssh docker@192.168.59.103 -p 49153 -o "StrictHostKeyChecking no"
+ssh docker@localhost -p 49153 -o "StrictHostKeyChecking no"
 
 # wrapper command
 alias ssh-docker=../../scripts/ssh-docker.sh

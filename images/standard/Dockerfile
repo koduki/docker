@@ -39,16 +39,21 @@ RUN yum --enablerepo=remi,epel,centosplus install -y \
   readline-devel\
   git 
 
+#
 # operation user
 #
 RUN useradd docker
 RUN passwd -f -u docker
 RUN usermod -s /bin/zsh docker
-
-RUN mkdir -p /home/docker/.ssh; chown docker /home/docker/.ssh; chmod 700 /home/docker/.ssh
-ADD resources/home/docker/.ssh/authorized_keys /home/docker/.ssh/authorized_keys
-RUN chown docker /home/docker/.ssh/authorized_keys; chmod 600 /home/docker/.ssh/authorized_keys
 RUN echo "docker    ALL=(ALL)       ALL" >> /etc/sudoers.d/docker
+
+RUN mkdir -p /home/docker/.ssh; chmod 700 /home/docker/.ssh
+
+ADD resources/home/docker/.ssh/authorized_keys /home/docker/.ssh/authorized_keys
+RUN chmod 600 /home/docker/.ssh/authorized_keys
+
+ADD resources/home/docker/.ssh/id_rsa /home/docker/.ssh/id_rsa
+RUN chmod 600 /home/docker/.ssh/id_rsa
 
 ADD resources/home/docker/.zshrc /home/docker/.zshrc
 ADD resources/home/docker/.zshrc.mine /home/docker/.zshrc.mine
@@ -58,42 +63,8 @@ RUN chown -R docker:docker /home/docker/
 #
 # SSH
 #
-#ADD ./sshd_config /etc/ssh/sshd_config
 RUN service sshd start
 RUN service sshd stop
 
-
-#
-# MySQL
-#
-RUN yum --enablerepo=remi,epel install -y mysql-server
-RUN touch /etc/sysconfig/network
-#RUN /etc/init.d/mysqld start && mysqladmin -u root password 'admin' && /etc/init.d/mysqld stop
-RUN /etc/init.d/mysqld start && /etc/init.d/mysqld stop
-
-
-#
-# Services(supervisor)
-#
-RUN yum --enablerepo=remi,epel install -y supervisor
-RUN mkdir -p /var/log/supervisor
-ADD ./resources/etc/supervisord.conf /etc/supervisord.conf 
-
 EXPOSE 22
-CMD ["/usr/bin/supervisord"]
-
-
-#
-# Ruby Environment
-#
-RUN cd /usr/local/ && git clone git://github.com/sstephenson/rbenv.git
-RUN echo 'export RBENV_ROOT="/usr/local/rbenv"' >> /etc/profile.d/rbenv.sh
-RUN echo 'export PATH="${RBENV_ROOT}/bin:${PATH}"' >> /etc/profile.d/rbenv.sh
-RUN echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh
-
-RUN mkdir /usr/local/rbenv/plugins
-RUN cd /usr/local/rbenv/plugins && git clone git://github.com/sstephenson/ruby-build.git
-
-RUN bash -lc 'rbenv install 2.1.2'
-RUN bash -lc 'rbenv global  2.1.2'
-RUN bash -lc 'gem install bundler'
+CMD ["/usr/sbin/sshd", "-D"]
