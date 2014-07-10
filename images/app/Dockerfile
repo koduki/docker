@@ -4,10 +4,10 @@ MAINTAINER koduki
 #
 # MySQL
 #
-RUN yum --enablerepo=remi,epel install -y mysql-server
-RUN touch /etc/sysconfig/network
+#RUN yum --enablerepo=remi,epel install -y mysql-server
+#RUN touch /etc/sysconfig/network
 #RUN /etc/init.d/mysqld start && mysqladmin -u root password 'admin' && /etc/init.d/mysqld stop
-RUN /etc/init.d/mysqld start && /etc/init.d/mysqld stop
+#RUN /etc/init.d/mysqld start && /etc/init.d/mysqld stop
 
 #
 # MongoDB
