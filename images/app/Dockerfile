@@ -9,6 +9,12 @@ RUN touch /etc/sysconfig/network
 #RUN /etc/init.d/mysqld start && mysqladmin -u root password 'admin' && /etc/init.d/mysqld stop
 RUN /etc/init.d/mysqld start && /etc/init.d/mysqld stop
 
+#
+# MongoDB
+#
+ADD resources/etc/yum.repos.d/mongodb.repo 
+RUN yum -y install mongodb-org
+RUN echo 'smallfiles = true' >> /etc/mongod.conf # make journal small
 
 #
 # Ruby Environment
