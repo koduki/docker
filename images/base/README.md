@@ -1,7 +1,7 @@
 koduki's Dockerfile
 =======================
 
-my standard docker image.
+my base docker image.
 
 How to
 -----------------------
@@ -9,15 +9,14 @@ How to
 ### make image
 
 ``
-docker build -t koduki/centos .
+docker build -t koduki/base .
 docker images
 ``
 
 ### run image
 
 ``
-docker rm -f app; 
-docker run -d -P --name app --hostname app koduki/centos 
+docker run -i -t koduki/base /bin/bash
 ``
 
 ### ssh
