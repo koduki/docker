@@ -15,6 +15,7 @@ MAINTAINER koduki
 ADD resources/etc/yum.repos.d/mongodb.repo 
 RUN yum -y install mongodb-org
 RUN echo 'smallfiles = true' >> /etc/mongod.conf # make journal small
+RUN gem install mongoid
 
 #
 # Ruby Environment
@@ -32,6 +33,8 @@ RUN gem install bundler
 RUN yum --enablerepo=remi,epel install -y libxml2-devel libxslt-devel
 RUN bundle config build.nokogiri --use-system-libraries
 
+# for RMagick
+RUN yum --enablerepo=remi,epel install -y ImageMagick-devel
 
 #
 # Angurar JS Environment
