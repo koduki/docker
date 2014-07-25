@@ -1,4 +1,4 @@
-FROM centos:7
+FROM centos:centos7
 MAINTAINER koduki
 
 #
@@ -7,18 +7,21 @@ MAINTAINER koduki
 RUN yum update -y
 RUN yum install -y wget
 
-RUN wget http://rpms.famillecollet.com/enterprise/remi-release-6.rpm ;\
-    wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm ;\
-    rpm -ivh epel-release-6-8.noarch.rpm remi-release-6.rpm
+RUN cd /tmp/;\
+    wget http://rpms.famillecollet.com/enterprise/remi-release-7.rpm;\
+    wget http://dl.fedoraproject.org/pub/epel/beta/7/x86_64/epel-release-7-0.2.noarch.rpm;\
+    rpm -ivh remi-release-7.rpm epel-release-7-0.2.noarch.rpm
 
 #
 # Install default packages
 #
 RUN yum --enablerepo=remi,epel install -y \
   sudo\
+  passwd\
   openssh\
   openssh-server\
   openssh-clients\
+  openssh-server-sysvinit\
   syslog\
   wget\
   rsync\
@@ -67,8 +70,8 @@ RUN echo 'export PATH=/usr/local/bin:$PATH' >> /root/.bashrc
 #
 # SSH
 #
-RUN service sshd start
-RUN service sshd stop
+RUN /etc/init.d/sshd start
+RUN /etc/init.d/sshd stop
 
-EXPOSE 22
-CMD ["/usr/sbin/sshd", "-D"]
+#EXPOSE 22
+#CMD ["/usr/sbin/sshd", "-D"]
