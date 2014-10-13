@@ -4,13 +4,8 @@ MAINTAINER koduki
 #
 # set repositories
 #
+RUN yum install -y epel-release
 RUN yum update -y
-RUN yum install -y wget
-
-RUN cd /tmp/;\
-    wget http://rpms.famillecollet.com/enterprise/remi-release-7.rpm;\
-    wget http://dl.fedoraproject.org/pub/epel/beta/7/x86_64/epel-release-7-0.2.noarch.rpm;\
-    rpm -ivh remi-release-7.rpm epel-release-7-0.2.noarch.rpm
 
 #
 # Install default packages
@@ -26,21 +21,19 @@ RUN yum --enablerepo=remi,epel install -y \
   wget\
   rsync\
   unzip\
-  zsh\
   nkf\
-  tar\
-  vim
+  tar
 
 #
 # Dev Tools
 #
-RUN yum --enablerepo=remi,epel groupinstall -y "Development tools"
-RUN yum --enablerepo=remi,epel,centosplus install -y \
-  gcc\
-  make\
-  openssl-devel\
-  readline-devel\
-  git 
+#RUN yum --enablerepo=remi,epel groupinstall -y "Development tools"
+#RUN yum --enablerepo=remi,epel,centosplus install -y \
+#  gcc\
+#  make\
+#  openssl-devel\
+#  readline-devel\
+#  git 
 
 #
 # operation user
@@ -57,9 +50,6 @@ RUN chmod 600 /home/docker/.ssh/authorized_keys
 
 ADD resources/home/docker/.ssh/id_rsa /home/docker/.ssh/id_rsa
 RUN chmod 600 /home/docker/.ssh/id_rsa
-
-ADD resources/home/docker/.zshrc /home/docker/.zshrc
-ADD resources/home/docker/.zshrc.mine /home/docker/.zshrc.mine
 RUN chown -R docker:docker /home/docker/
 
 #
@@ -70,8 +60,8 @@ RUN echo 'export PATH=/usr/local/bin:$PATH' >> /root/.bashrc
 #
 # SSH
 #
-RUN /etc/init.d/sshd start
-RUN /etc/init.d/sshd stop
+#RUN /etc/init.d/sshd start
+#RUN /etc/init.d/sshd stop
 
 #EXPOSE 22
 #CMD ["/usr/sbin/sshd", "-D"]
